@@ -1,6 +1,0 @@
-
-
-
-public stativ void main(String[] args) {
-	
-}
