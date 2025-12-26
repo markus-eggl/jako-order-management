@@ -8,7 +8,7 @@ import me.eggl.m.jakoordermanager.common.GetXMLFile;
 /**
  * 
  */
-public enum Parts implements GetXMLFile{
+public enum UnfinishedOrders implements GetXMLFile{
     INSTANCE;
 
     @Override
@@ -16,5 +16,5 @@ public enum Parts implements GetXMLFile{
         // TODO Auto-generated method stub
         return null;
     }
-
+    
 }
