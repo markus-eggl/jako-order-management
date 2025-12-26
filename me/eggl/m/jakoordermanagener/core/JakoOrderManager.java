@@ -1,3 +1,4 @@
+package me.eggl.m.jakoordermanagener.core;
 
 
 public class JakoOrderManager{
