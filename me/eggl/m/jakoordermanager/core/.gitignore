@@ -2,3 +2,11 @@
 /JakoOrderManager.class
 /PartsCollection.class
 /OrdersCollection.class
+/OutstandingOrdersCollection.class
+/OutstandingOrders.class
+/Parts.class
+/CompletedOrders.class
+/NotFinishedOrders.class
+/Orders.class
+/OpenXML.class
+/OpenXMLFile.class
