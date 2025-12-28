@@ -4,6 +4,7 @@
 package me.eggl.m.jakoordermanager.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import me.eggl.m.jakoordermanager.common.*;
 
@@ -12,6 +13,7 @@ import me.eggl.m.jakoordermanager.common.*;
  */
 public class Order {
     
+    private LocalDate acceptedOn;
     private Client client;
     private Status status;
     private BigDecimal costEstinateGross;
@@ -20,3 +22,21 @@ public class Order {
     private Part[] parts;
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
