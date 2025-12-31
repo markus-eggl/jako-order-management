@@ -1,3 +1,13 @@
 /package-info.class
 /GetXMLFile.class
 /Status.class
+/Configuration.class
+/JOMConfiguration.class
+/CreateIfNotExist.class
+/CheckPermissions.class
+/CheckReadWritePermissions.class
+/CheckReadWritePermissionsForExisting.class
+/CopyTemplateIfNotAvailable.class
+/CopyXMLFromTemplate.class
+/CopyTemplateToDirectory.class
+/CopyXMLTemplateToDirectory.class

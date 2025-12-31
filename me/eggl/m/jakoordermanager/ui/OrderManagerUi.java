@@ -3,6 +3,7 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
+import me.eggl.m.jakoordermanager.common.*;
 /**
  * 
  */
@@ -12,9 +13,8 @@ public class OrderManagerUi {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		System.out.println("Test");
-		
-		new MainFrame();
+		JOMConfiguration jomConfiguration = new JOMConfiguration();
+		new MainFrame(jomConfiguration);
 	}
 
 }
