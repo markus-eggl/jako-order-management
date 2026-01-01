@@ -20,13 +20,8 @@ public class MainFrame {
         super();
         JFrame f = new JFrame("Order Manager");
         // addClosingQuery(f);
-        if ( jomConfiguration.getWorkingDirectory() == null) {
-            f.add(new JLabel("Kein Arbeitsverzeichnis eingetragen!"));
-            setShowOptions(f);
-            return;
-        }
-        
         addTabs(f);
+        
         
         setShowOptions(f);
     }

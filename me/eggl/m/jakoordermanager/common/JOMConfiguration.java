@@ -72,7 +72,7 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
      * @param workingDirectory the workingDirectory to set
      */
     public void setWorkingDirectory(String workingDirectory) {
-        if ( workingDirectory != ""  ) {
+        if ( workingDirectory != "" ) {
             this.workingDirectory = workingDirectory;
             doc.getRootElement().setText(workingDirectory);
             this.writeToXMLFile();
