@@ -12,3 +12,5 @@
 /CopyTemplateToDirectory.class
 /CopyXMLTemplateToDirectory.class
 /GetInsets.class
+/FileHandler.class
+/XMLFileHandler.class

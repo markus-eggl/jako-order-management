@@ -11,9 +11,6 @@ import java.nio.file.StandardCopyOption;
 /**
  * 
  */
-public interface CopyXMLTemplateToDirectory {
+public interface CopyXMLTemplateToDirectory { 
     Path templatesDirectory = Path.of(".", "resources", "xmlTemplates");
-    default void copyTemplateInDirectory(Path source, Path target) throws IOException {
-        Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
-    }
 }

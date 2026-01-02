@@ -3,18 +3,35 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.ConsoleHandler;
+
 import javax.swing.JFileChooser;
 
 /**
  * 
  */
 public class Chooser {
+    
+    private static final Logger LOGGER = Logger.getLogger(Chooser.class.getName());
+    
+    static {
+        // Level: OFF, INFO, FINE
+        final Level LOGLEVEL = Level.INFO;
+        LOGGER.setLevel(LOGLEVEL);
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(LOGLEVEL);
+        LOGGER.addHandler(handler);
+    }
+    
     public static String directoryChooser(String title) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(title);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = chooser.showDialog(null, "Auswählen");
         if (result == JFileChooser.APPROVE_OPTION) {
+            LOGGER.log(Level.FINE, "Ausgewälter Ordner: {0}", chooser.getSelectedFile());
             return chooser.getSelectedFile().getAbsolutePath();
         } else {
             return "";
