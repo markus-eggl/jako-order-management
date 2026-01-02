@@ -3,7 +3,7 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
-import me.eggl.m.jakoordermanager.common.*;
+import me.eggl.m.jakoordermanager.core.JOMConfiguration;
 /**
  * 
  */

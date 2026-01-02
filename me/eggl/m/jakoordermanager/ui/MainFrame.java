@@ -3,10 +3,18 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-import me.eggl.m.jakoordermanager.common.JOMConfiguration;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JTextField;
+
+import me.eggl.m.jakoordermanager.core.JOMConfiguration;
+import me.eggl.m.jakoordermanager.common.GetInsets;
 
 /**
  * 
@@ -20,7 +28,7 @@ public class MainFrame {
         super();
         JFrame f = new JFrame("Order Manager");
         // addClosingQuery(f);
-        addTabs(f);
+        addTabs(f, jomConfiguration);
         
         
         setShowOptions(f);
@@ -38,11 +46,11 @@ public class MainFrame {
     /**
      * @param f
      */
-    private void addTabs(JFrame f) {
+    private void addTabs(JFrame f, JOMConfiguration jomConfiguration) {
         JTabbedPane tabbedPane = new JTabbedPane();
         // tabbedPane.addTab("Neu", new JLabel("Tab Neu"));
         
-        addConfigPanel(tabbedPane);
+        addConfigPanel(tabbedPane, jomConfiguration);
         
         f.add(tabbedPane);
     }
@@ -50,11 +58,23 @@ public class MainFrame {
     /**
      * @param tabbedPane
      */
-    private void addConfigPanel(JTabbedPane tabbedPane) {
+    private void addConfigPanel(JTabbedPane tabbedPane, JOMConfiguration jomConfiguration) {
         JPanel configPanel = new JPanel();
         configPanel.add(new JLabel("Arbeitsverzeichnis:"));
-        configPanel.add(new JTextField(20));
+        configPanel.add(createWorkingDirectoryTextField(jomConfiguration));
         tabbedPane.addTab("Configuration", configPanel);
+    }
+
+    /**
+     * @param jomConfiguration
+     * @return
+     */
+    private JTextField createWorkingDirectoryTextField(JOMConfiguration jomConfiguration) {
+        JTextField workingDirectory = new JTextField();
+        workingDirectory.setText(jomConfiguration.getWorkingDirectory());
+        workingDirectory.setEditable(false);
+        workingDirectory.setMargin(GetInsets.getInsetsForTextField());
+        return workingDirectory;
     }
 
     /**

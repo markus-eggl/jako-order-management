@@ -3,18 +3,11 @@
  */
 package me.eggl.m.jakoordermanager.core;
 
-import me.eggl.m.jakoordermanager.common.GetXMLFile;
-
 /**
  * 
  */
-public enum FinishedOrders implements GetXMLFile {
+public enum FinishedOrders {
     INSTANCE;
 
-    @Override
-    public Object getXMLData() {
-        // TODO Auto-generated method stub
-        return null;
-    }
     
 }

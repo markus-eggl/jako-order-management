@@ -1,7 +1,7 @@
 /**
  * 
  */
-package me.eggl.m.jakoordermanager.common;
+package me.eggl.m.jakoordermanager.core;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,6 +14,8 @@ import org.jdom2.output.XMLOutputter;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
+import me.eggl.m.jakoordermanager.common.CopyXMLTemplateToDirectory;
+import me.eggl.m.jakoordermanager.common.CheckReadWritePermissions;
 import me.eggl.m.jakoordermanager.ui.Chooser;
 import me.eggl.m.jakoordermanager.ui.UiDialogs;
 
@@ -28,7 +30,7 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
     /**
      * 
      */
-    public JOMConfiguration() {
+    public JOMConfiguration() { // TODO convert to a singelton
         super();
         try {
             Path source = Path.of(templatesDirectory.toString(), workingDirectoryFilename);
@@ -72,6 +74,8 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
      * @param workingDirectory the workingDirectory to set
      */
     public void setWorkingDirectory(String workingDirectory) {
+        // TODO Check if workingDirectory exists and permissions
+        workingDirectory.strip();
         if ( workingDirectory != "" ) {
             this.workingDirectory = workingDirectory;
             doc.getRootElement().setText(workingDirectory);
@@ -79,6 +83,7 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
         }
     }
     
+    // TODO extract to common
     private void writeToXMLFile() {
         XMLOutputter xmlOutput = new XMLOutputter();
         xmlOutput.setFormat(Format.getPrettyFormat());
