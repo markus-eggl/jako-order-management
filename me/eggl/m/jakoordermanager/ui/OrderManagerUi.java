@@ -13,7 +13,7 @@ public class OrderManagerUi {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		JOMConfiguration jomConfiguration = new JOMConfiguration();
+		JOMConfiguration jomConfiguration = JOMConfiguration.getInstance();
 		new MainFrame(jomConfiguration);
 	}
 

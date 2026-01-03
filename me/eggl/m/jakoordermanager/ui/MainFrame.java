@@ -14,7 +14,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
 import me.eggl.m.jakoordermanager.core.JOMConfiguration;
-import me.eggl.m.jakoordermanager.common.GetInsets;
+import me.eggl.m.jakoordermanager.common.GetSpecials;
 
 /**
  * 
@@ -73,7 +73,7 @@ public class MainFrame {
         JTextField workingDirectory = new JTextField();
         workingDirectory.setText(jomConfiguration.getWorkingDirectory());
         workingDirectory.setEditable(false);
-        workingDirectory.setMargin(GetInsets.getInsetsForTextField());
+        workingDirectory.setMargin(GetSpecials.getInsetsForTextField());
         return workingDirectory;
     }
 

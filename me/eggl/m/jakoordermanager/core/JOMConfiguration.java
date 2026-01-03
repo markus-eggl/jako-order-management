@@ -13,8 +13,9 @@ import java.util.logging.Level;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
-import me.eggl.m.jakoordermanager.common.CopyXMLTemplateToDirectory;
+import me.eggl.m.jakoordermanager.common.XMLTemplateDirectory;
 import me.eggl.m.jakoordermanager.common.FileHandler;
+import me.eggl.m.jakoordermanager.common.GetSpecials;
 import me.eggl.m.jakoordermanager.common.XMLFileHandler;
 import me.eggl.m.jakoordermanager.ui.Chooser;
 import me.eggl.m.jakoordermanager.ui.UiDialogs;
@@ -22,9 +23,10 @@ import me.eggl.m.jakoordermanager.ui.UiDialogs;
 /**
  * 
  */
-public class JOMConfiguration implements CopyXMLTemplateToDirectory {
+public class JOMConfiguration implements XMLTemplateDirectory {
     
     private static final Logger LOGGER = Logger.getLogger(JOMConfiguration.class.getName());
+    private static JOMConfiguration instance = new JOMConfiguration();
     
     static {
         // Level: OFF, INFO, FINE
@@ -33,36 +35,44 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
         ConsoleHandler handler = new ConsoleHandler();
         handler.setLevel(LOGLEVEL);
         LOGGER.addHandler(handler);
+        LOGGER.setUseParentHandlers(false);
     }
     
     private final String workingDirectoryFilename = "JOMWorkingDirectory.xml";
     private String workingDirectory;
     private Document doc;
     
+
     /**
      * 
      */
-    public JOMConfiguration() { // TODO convert to a singelton
+    private JOMConfiguration() {
         super();
         try {
-            Path source = Path.of(templatesDirectory.toString(), workingDirectoryFilename);
+            Path source = Path.of(templateDirectory.toString(), workingDirectoryFilename);
             Path target = Path.of(".", workingDirectoryFilename);
             
             if ( ! FileHandler.checkIfFileExists(target) ) {
+                LOGGER.log(Level.INFO, 
+                        "File {0} not exists", 
+                        GetSpecials.setTextColorForTerminal(target.toString(), "g"));
                 XMLFileHandler.copyXMLTemplateInDirectory(source, target);
             }
-            if ( FileHandler.checkReadWritePermissionsForExistingPath(target) ) {
-                doc = XMLFileHandler.readXMLObjectFromFile(target.toString());
-                workingDirectory = doc.getRootElement().getText();
+            if ( ! FileHandler.checkReadWritePermissionsForExistingPath(target) ) {
+                UiDialogs.appExitWithMessage( String.format("No read-/write-Permissions for %s !", target) );
             }
-            if ( workingDirectory == "" ) {
-                chooseWorkingDirectoryOrExit();
-            }
-            
+            this.doc = XMLFileHandler.readXMLObjectFromFile(target.toString());
+            this.workingDirectory = this.getValidWorkingDirectoryOrReset();
+            LOGGER.log(Level.FINE, "Arbeitsverzeichnis: {0}", 
+                FileHandler.checkIfDirectoryExists(this.workingDirectory));
         } catch (IOException | JDOMException e) {
-            UiDialogs.appExitWithMessage("Exception:" + "\n" + e.getMessage() + "\n" + e.getCause());
             e.printStackTrace();
+            UiDialogs.appExitWithMessage("Exception:" + "\n" + e.getMessage() + "\n" + e.getCause());
         }
+    }
+    
+    public static JOMConfiguration getInstance() {
+        return instance;
     }
 
     /**
@@ -70,9 +80,9 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
      * 
      */
     private void chooseWorkingDirectoryOrExit() throws IOException {
-        this.setWorkingDirectory(Chooser.directoryChooser("Arbeitsverzeichnis"));
+        this.setNewWorkingDirectory(Chooser.directoryChooser("Arbeitsverzeichnis"));
         LOGGER.log(Level.FINE, "Arbeitsverzeichnis: {0}", this.workingDirectory);
-        if ( workingDirectory == "" ) {
+        if ( this.getWorkingDirectory() == null || this.getWorkingDirectory().isBlank() ) {
             UiDialogs.appExitWithMessage("Kein Arbeitsverzeichnis ausgewählt.");
         }
     }
@@ -81,30 +91,63 @@ public class JOMConfiguration implements CopyXMLTemplateToDirectory {
      * @return the workingDirectory
      */
     public String getWorkingDirectory() {
-        return workingDirectory;
+        return this.workingDirectory;
     }
 
     /**
      * @param workingDirectory the workingDirectory to set
      * @throws IOException 
      */
-    public void setWorkingDirectory(String workingDirectory) throws IOException {
+    public void setNewWorkingDirectory(String workingDirectory) throws IOException {
         workingDirectory.strip();
         LOGGER.log(Level.FINE, "Arbeitsverzeichnis (strip): {0}", workingDirectory);
-        if ( FileHandler.checkDirectoryExistsAndPermissions( Path.of(workingDirectory) ) ) {
+        if ( FileHandler.checkDirectoryExistsAndPermissions( workingDirectory ) ) {
             LOGGER.log(Level.FINE, "SetWorkingDirectotry");
             this.workingDirectory = workingDirectory;
-            doc.getRootElement().setText(workingDirectory);
+            this.doc.getRootElement().setText(workingDirectory);
             this.writeToXMLFile();
+            LOGGER.log(Level.INFO, 
+                    "Arbeitsverzeichnis {0} eingetragen", 
+                    GetSpecials.setTextColorForTerminal(workingDirectory, "g"));
+            return;
         }
+        this.chooseWorkingDirectoryOrExit();
     }
+    
+    
+    /**
+     * @throws IOException
+     */
+    private void resetAndChooseNewWorkingDirectory() throws IOException {
+        String message = "The specified working directory cannot be used.\nPlease select a new one.";
+        UiDialogs.appMessage(message);
+        this.resetWorkingDirectory();
+        this.chooseWorkingDirectoryOrExit();
+    }
+    
+    private String getValidWorkingDirectoryOrReset() throws IOException {
+        String pathFromXMLFile = this.doc.getRootElement().getText();
+        if ( ! FileHandler.checkDirectoryExistsAndPermissions(pathFromXMLFile)) {
+            this.resetAndChooseNewWorkingDirectory();
+            pathFromXMLFile = this.doc.getRootElement().getText();
+        }
+        return pathFromXMLFile;
+    }
+    
+    private void resetWorkingDirectory() {
+        this.workingDirectory = "";
+        this.doc.getRootElement().setText("");
+        this.writeToXMLFile();
+        LOGGER.log(Level.INFO, "Working directory was reset");
+    }
+    
     
     private void writeToXMLFile() {
         try {
             XMLFileHandler.writeXMLObjectToFile(doc, workingDirectoryFilename);
         } catch (IOException e) {
-            UiDialogs.appExitWithMessage("Exception:" + "\n" + e.getMessage() + "\n" + e.getCause());
             e.printStackTrace();
+            UiDialogs.appExitWithMessage("Exception:" + "\n" + e.getMessage() + "\n" + e.getCause());
         }
     }
 }

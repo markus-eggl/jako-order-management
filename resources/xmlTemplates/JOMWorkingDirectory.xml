@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<working_directory/>
+<?xml-stylesheet type="text/css" href="JOMWorkingDirectory.css"?>
+<working_directory 
+    xmlns="jakoordermanager/config" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="jakoordermanager/config JOMWorkingDirectory.xsd" />
 
 
 
