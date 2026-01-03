@@ -30,11 +30,12 @@ public class XMLFileHandler implements XMLTemplateDirectory {
     private static final Logger LOGGER = Logger.getLogger(XMLFileHandler.class.getName());
     static {
         // Level: OFF, INFO, FINE
-        final Level LOGLEVEL = Level.FINE;
+        final Level LOGLEVEL = Level.INFO;
         LOGGER.setLevel(LOGLEVEL);
         ConsoleHandler handler = new ConsoleHandler();
         handler.setLevel(LOGLEVEL);
         LOGGER.addHandler(handler);
+        LOGGER.setUseParentHandlers(false);
     }
     
     public static Document readXMLObjectFromFile(String filepath) throws JDOMException, IOException {
@@ -73,6 +74,7 @@ public class XMLFileHandler implements XMLTemplateDirectory {
         LOGGER.log(Level.FINE, 
                 "\t copyXMLTemplateInDirectory aufgerufen:\n\t source: {0},\n\t target: {1}.\t",
                 new Object[] { source, target } );
+        
         checkStringForNullOrEmpty(source.toString());
         checkStringForNullOrEmpty(target.toString());
         
@@ -81,25 +83,46 @@ public class XMLFileHandler implements XMLTemplateDirectory {
                 new Object[]  { GetSpecials.setTextColorForTerminal(source.toString(), "g"), 
                         FileHandler.checkFileExistsAndPermissions(source) } );
         
-        getSourceFiles(source);
-        
-        if ( FileHandler.checkFileExistsAndPermissions(source) ) {
-            LOGGER.log(Level.FINE, "Source {0} exists and read-/writeable.", source );
+        LOGGER.log(Level.FINE, "FileList: {0}", 
+                GetSpecials.setTextColorForTerminal(getSourceFiles(source).toString(), "g") );
+        for ( Path sourceFile : getSourceFiles(source) ) {
+            LOGGER.log(Level.INFO, "sourcefile: {0}", 
+                    GetSpecials.setTextColorForTerminal(sourceFile.toString(), "g") );
+            copyFile(getTargetFilePath(sourceFile, target), sourceFile);
+        }
+    }
+
+    /**
+     * @param target
+     * @param sourceFile
+     * @throws IOException
+     */
+    private static void copyFile(Path targetFile, Path sourceFile) throws IOException {
+        if ( FileHandler.checkFileExistsAndPermissions(sourceFile) ) {
+            LOGGER.log(Level.FINE, "Source {0} exists and read-/writeable.", 
+                    GetSpecials.setTextColorForTerminal(sourceFile.toString(), "g") );
+            
             LOGGER.log(Level.FINE, 
                     "{0} permissions: {1}.", 
-                    new Object[]  { GetSpecials.setTextColorForTerminal(target.toString(), "g"), 
-                            FileHandler.checkFileExistsAndPermissions(target) } );
-            
-            if ( ! FileHandler.checkFileExistsAndPermissions(target) ) {
-                LOGGER.log(Level.FINE, "Target {0} exists and read-/writeable.", target );
-                Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+                    new Object[]  { GetSpecials.setTextColorForTerminal(targetFile.toString(), "g"), 
+                            FileHandler.checkFileExistsAndPermissions(targetFile) } );
+            if ( ! FileHandler.checkFileExistsAndPermissions(targetFile) ) {
+                LOGGER.log(Level.FINE, "Target {0} exists and read-/writeable.", targetFile );
+                Files.copy(sourceFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
                 LOGGER.log(Level.INFO, 
                         "XML Template {0} nach {1} kopiert.", 
-                        new Object[] { GetSpecials.setTextColorForTerminal(source.toString(), "g"), 
-                                GetSpecials.setTextColorForTerminal(target.toString(), "g") });
-                return;
+                        new Object[] { GetSpecials.setTextColorForTerminal(sourceFile.toString(), "g"), 
+                                GetSpecials.setTextColorForTerminal(targetFile.toString(), "g") });
             }
         }
+    }
+
+    /**
+     * @param sourceFile
+     * @return
+     */
+    private static Path getTargetFilePath(Path sourceFile, Path target) {
+        return Path.of(target.getParent().toString() , sourceFile.getFileName().toString());
     }
 
     /**
@@ -117,9 +140,9 @@ public class XMLFileHandler implements XMLTemplateDirectory {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        LOGGER.log(Level.FINE, "pathlist: {0}", GetSpecials.setTextColorForTerminal(pathlist.toString(), "g") );
         
-        return null;
+        LOGGER.log(Level.FINE, "pathlist: {0}", GetSpecials.setTextColorForTerminal(pathlist.toString(), "g") );
+        return pathlist;
     }
 
     /**
