@@ -26,6 +26,7 @@ public class FileHandler {
         ConsoleHandler handler = new ConsoleHandler();
         handler.setLevel(LOGLEVEL);
         LOGGER.addHandler(handler);
+        LOGGER.setUseParentHandlers(false);
     }
     
     public static boolean checkReadWritePermissionsForExistingPath(Path path) throws IOException {
@@ -80,7 +81,7 @@ public class FileHandler {
         return ( checkIfDirectoryExists(path) & checkReadWritePermissionsForExistingPath(path)  );
     }
     public static boolean checkDirectoryExistsAndPermissions(String path) throws IOException {
-        if (path.isBlank() | path == null) {
+        if ( path == null || path.isBlank() ) {
             return false;
         }
         return checkDirectoryExistsAndPermissions( Path.of(path) );

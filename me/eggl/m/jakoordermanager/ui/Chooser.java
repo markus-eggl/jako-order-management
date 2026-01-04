@@ -26,10 +26,11 @@ public class Chooser {
     }
     
     public static String directoryChooser(String title) {
+        LOGGER.log(Level.INFO, "directoryChooser: {0}", title);
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle(title);
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int result = chooser.showDialog(null, "Auswählen");
+        int result = chooser.showDialog(null, "Choose");
         if (result == JFileChooser.APPROVE_OPTION) {
             LOGGER.log(Level.FINE, "Ausgewälter Ordner: {0}", chooser.getSelectedFile());
             return chooser.getSelectedFile().getAbsolutePath();

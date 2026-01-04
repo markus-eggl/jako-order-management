@@ -62,7 +62,7 @@ public class JOMConfiguration implements XMLTemplateDirectory {
                 UiDialogs.appExitWithMessage( String.format("No read-/write-Permissions for %s !", target) );
             }
             this.doc = XMLFileHandler.readXMLObjectFromFile(target.toString());
-            this.workingDirectory = this.getValidWorkingDirectoryOrReset();
+            this.workingDirectory = this.getValidWorkingDirectoryOrExit();
             LOGGER.log(Level.FINE, "Arbeitsverzeichnis: {0}", 
                 FileHandler.checkIfDirectoryExists(this.workingDirectory));
         } catch (IOException | JDOMException e) {
@@ -80,10 +80,10 @@ public class JOMConfiguration implements XMLTemplateDirectory {
      * 
      */
     private void chooseWorkingDirectoryOrExit() throws IOException {
-        this.setNewWorkingDirectory(Chooser.directoryChooser("Arbeitsverzeichnis"));
+        this.setNewWorkingDirectory(Chooser.directoryChooser("Choose working directory"));
         LOGGER.log(Level.FINE, "Arbeitsverzeichnis: {0}", this.workingDirectory);
         if ( this.getWorkingDirectory() == null || this.getWorkingDirectory().isBlank() ) {
-            UiDialogs.appExitWithMessage("Kein Arbeitsverzeichnis ausgewählt.");
+            UiDialogs.appExitWithMessage("No valid working directory choosen!");
         }
     }
 
@@ -95,23 +95,35 @@ public class JOMConfiguration implements XMLTemplateDirectory {
     }
 
     /**
-     * @param workingDirectory the workingDirectory to set
+     * @param newWorkingDirectory the workingDirectory to set
      * @throws IOException 
      */
-    public void setNewWorkingDirectory(String workingDirectory) throws IOException {
-        workingDirectory.strip();
-        LOGGER.log(Level.FINE, "Arbeitsverzeichnis (strip): {0}", workingDirectory);
-        if ( FileHandler.checkDirectoryExistsAndPermissions( workingDirectory ) ) {
-            LOGGER.log(Level.FINE, "SetWorkingDirectotry");
-            this.workingDirectory = workingDirectory;
-            this.doc.getRootElement().setText(workingDirectory);
-            this.writeToXMLFile();
-            LOGGER.log(Level.INFO, 
-                    "Arbeitsverzeichnis {0} eingetragen", 
-                    GetSpecials.setTextColorForTerminal(workingDirectory, "g"));
+    public void setNewWorkingDirectory(String newWorkingDirectory) throws IOException {
+        newWorkingDirectory.strip();
+        LOGGER.log(Level.FINE, "Arbeitsverzeichnis (strip): {0}", newWorkingDirectory);
+        if ( FileHandler.checkDirectoryExistsAndPermissions( newWorkingDirectory ) ) {
+            saveNewWorkingDirectory(newWorkingDirectory);
             return;
         }
-        this.chooseWorkingDirectoryOrExit();
+        if ( FileHandler.checkDirectoryExistsAndPermissions(workingDirectory) ) {
+            UiDialogs.appMessage(String.format("The working directory had not changed.\nThe current working directory: %s", 
+                                                workingDirectory ) );
+            return;
+        }
+        UiDialogs.appExitWithMessage("No valid working directory set.");
+    }
+
+    /**
+     * @param workingDirectory
+     */
+    private void saveNewWorkingDirectory(String workingDirectory) {
+        LOGGER.log(Level.FINE, "SetWorkingDirectotry");
+        this.workingDirectory = workingDirectory;
+        this.doc.getRootElement().setText(workingDirectory);
+        this.writeToXMLFile();
+        LOGGER.log(Level.INFO, 
+                "Arbeitsverzeichnis {0} eingetragen", 
+                GetSpecials.setTextColorForTerminal(workingDirectory, "g"));
     }
     
     
@@ -125,10 +137,11 @@ public class JOMConfiguration implements XMLTemplateDirectory {
         this.chooseWorkingDirectoryOrExit();
     }
     
-    private String getValidWorkingDirectoryOrReset() throws IOException {
+    private String getValidWorkingDirectoryOrExit() throws IOException {
         String pathFromXMLFile = this.doc.getRootElement().getText();
         if ( ! FileHandler.checkDirectoryExistsAndPermissions(pathFromXMLFile)) {
-            this.resetAndChooseNewWorkingDirectory();
+            LOGGER.log(Level.FINE, "current working directory is not valid");
+            this.chooseWorkingDirectoryOrExit();
             pathFromXMLFile = this.doc.getRootElement().getText();
         }
         return pathFromXMLFile;

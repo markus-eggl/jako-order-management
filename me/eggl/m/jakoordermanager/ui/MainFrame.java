@@ -60,7 +60,7 @@ public class MainFrame {
      */
     private void addConfigPanel(JTabbedPane tabbedPane, JOMConfiguration jomConfiguration) {
         JPanel configPanel = new JPanel();
-        configPanel.add(new JLabel("Arbeitsverzeichnis:"));
+        configPanel.add(new JLabel("Working directory:"));
         configPanel.add(createWorkingDirectoryTextField(jomConfiguration));
         tabbedPane.addTab("Configuration", configPanel);
     }
