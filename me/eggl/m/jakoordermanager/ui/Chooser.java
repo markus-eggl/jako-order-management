@@ -10,7 +10,11 @@ import java.util.logging.ConsoleHandler;
 import javax.swing.JFileChooser;
 
 /**
+ * The class provide a directory chooser.
  * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
 public class Chooser {
     

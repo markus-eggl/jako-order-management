@@ -14,7 +14,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
+ * The class provide only static methods for file and directory management.
  * 
+ *  The methods are for checking the existence and read-/write permissions on
+ *  directories and files. 
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
 public class FileHandler {
     

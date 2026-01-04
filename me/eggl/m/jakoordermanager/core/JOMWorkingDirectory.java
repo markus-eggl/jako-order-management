@@ -13,20 +13,32 @@ import java.util.logging.Level;
 import org.jdom2.Document;
 import org.jdom2.JDOMException;
 
-import me.eggl.m.jakoordermanager.common.XMLTemplateDirectory;
 import me.eggl.m.jakoordermanager.common.FileHandler;
 import me.eggl.m.jakoordermanager.common.GetSpecials;
 import me.eggl.m.jakoordermanager.common.XMLFileHandler;
 import me.eggl.m.jakoordermanager.ui.Chooser;
 import me.eggl.m.jakoordermanager.ui.UiDialogs;
 
+import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTORY;
+
 /**
+ * The class is the connection between the app and OMWorkingDirectory.xml
  * 
+ * The setter and getter validate the working directory. If the working
+ * directory is not valid, the user has to choose a new valid directory.
+ * For the validation it would be checked if the directory exists and
+ * the user has the read and write permissions for it.
+ * A new valid set working directory would also be saved in the xml-file and
+ * in the class parameter.
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
-public class JOMConfiguration implements XMLTemplateDirectory {
+public class JOMWorkingDirectory {
     
-    private static final Logger LOGGER = Logger.getLogger(JOMConfiguration.class.getName());
-    private static JOMConfiguration instance = new JOMConfiguration();
+    private static final Logger LOGGER = Logger.getLogger(JOMWorkingDirectory.class.getName());
+    private static JOMWorkingDirectory instance = new JOMWorkingDirectory();
     
     static {
         // Level: OFF, INFO, FINE
@@ -46,10 +58,10 @@ public class JOMConfiguration implements XMLTemplateDirectory {
     /**
      * 
      */
-    private JOMConfiguration() {
+    private JOMWorkingDirectory() {
         super();
         try {
-            Path source = Path.of(templateDirectory.toString(), workingDirectoryFilename);
+            Path source = Path.of(XML_TEMPLATE_DIRECTORY.toString(), workingDirectoryFilename);
             Path target = Path.of(".", workingDirectoryFilename);
             
             if ( ! FileHandler.checkIfFileExists(target) ) {
@@ -71,7 +83,7 @@ public class JOMConfiguration implements XMLTemplateDirectory {
         }
     }
     
-    public static JOMConfiguration getInstance() {
+    public static JOMWorkingDirectory getInstance() {
         return instance;
     }
 
@@ -130,13 +142,6 @@ public class JOMConfiguration implements XMLTemplateDirectory {
     /**
      * @throws IOException
      */
-    private void resetAndChooseNewWorkingDirectory() throws IOException {
-        String message = "The specified working directory cannot be used.\nPlease select a new one.";
-        UiDialogs.appMessage(message);
-        this.resetWorkingDirectory();
-        this.chooseWorkingDirectoryOrExit();
-    }
-    
     private String getValidWorkingDirectoryOrExit() throws IOException {
         String pathFromXMLFile = this.doc.getRootElement().getText();
         if ( ! FileHandler.checkDirectoryExistsAndPermissions(pathFromXMLFile)) {
@@ -147,14 +152,7 @@ public class JOMConfiguration implements XMLTemplateDirectory {
         return pathFromXMLFile;
     }
     
-    private void resetWorkingDirectory() {
-        this.workingDirectory = "";
-        this.doc.getRootElement().setText("");
-        this.writeToXMLFile();
-        LOGGER.log(Level.INFO, "Working directory was reset");
-    }
-    
-    
+
     private void writeToXMLFile() {
         try {
             XMLFileHandler.writeXMLObjectToFile(doc, workingDirectoryFilename);

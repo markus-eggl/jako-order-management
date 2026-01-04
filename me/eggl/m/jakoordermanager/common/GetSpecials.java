@@ -6,7 +6,14 @@ package me.eggl.m.jakoordermanager.common;
 import java.awt.Insets;
 
 /**
+ * various methods
  * 
+ * - Insets for the JTextField
+ * - colors for the terminal
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
 public class GetSpecials {
     

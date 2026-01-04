@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
-import me.eggl.m.jakoordermanager.core.JOMConfiguration;
+import me.eggl.m.jakoordermanager.core.JOMWorkingDirectory;
 import me.eggl.m.jakoordermanager.common.GetSpecials;
 
 /**
@@ -22,9 +22,16 @@ import me.eggl.m.jakoordermanager.common.GetSpecials;
 public class MainFrame {
 
     /**
+     * Class for the main UI window in the app.
      * 
+     * The UI is created in Swing. The UI would be created on currend data in the
+     * working directory. 
+     * 
+     * @author Markus Eggl
+     * @version 1.0 (2026)
+     * @since 1.0
      */
-    public MainFrame(JOMConfiguration jomConfiguration) {
+    public MainFrame(JOMWorkingDirectory jomConfiguration) {
         super();
         JFrame f = new JFrame("Order Manager");
         // addClosingQuery(f);
@@ -46,7 +53,7 @@ public class MainFrame {
     /**
      * @param f
      */
-    private void addTabs(JFrame f, JOMConfiguration jomConfiguration) {
+    private void addTabs(JFrame f, JOMWorkingDirectory jomConfiguration) {
         JTabbedPane tabbedPane = new JTabbedPane();
         // tabbedPane.addTab("Neu", new JLabel("Tab Neu"));
         
@@ -58,7 +65,7 @@ public class MainFrame {
     /**
      * @param tabbedPane
      */
-    private void addConfigPanel(JTabbedPane tabbedPane, JOMConfiguration jomConfiguration) {
+    private void addConfigPanel(JTabbedPane tabbedPane, JOMWorkingDirectory jomConfiguration) {
         JPanel configPanel = new JPanel();
         configPanel.add(new JLabel("Working directory:"));
         configPanel.add(createWorkingDirectoryTextField(jomConfiguration));
@@ -69,7 +76,7 @@ public class MainFrame {
      * @param jomConfiguration
      * @return
      */
-    private JTextField createWorkingDirectoryTextField(JOMConfiguration jomConfiguration) {
+    private JTextField createWorkingDirectoryTextField(JOMWorkingDirectory jomConfiguration) {
         JTextField workingDirectory = new JTextField();
         workingDirectory.setText(jomConfiguration.getWorkingDirectory());
         workingDirectory.setEditable(false);

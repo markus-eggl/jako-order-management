@@ -5,10 +5,12 @@ package me.eggl.m.jakoordermanager.common;
 
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.ConsoleHandler;
@@ -22,10 +24,22 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTORY;
+
 /**
+ * The class provide static methods for XML-files.
  * 
+ * There are methods for
+ * - open XML-files and get the root object,
+ * - save a XML object to a file
+ * - validation of path elements
+ * - looking for and copy template files to the working directory
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
-public class XMLFileHandler implements XMLTemplateDirectory {
+public class XMLFileHandler {
     
     private static final Logger LOGGER = Logger.getLogger(XMLFileHandler.class.getName());
     static {
@@ -134,7 +148,7 @@ public class XMLFileHandler implements XMLTemplateDirectory {
         List<Path> pathlist = new ArrayList<>();
         
         try (Stream<Path> stream = Files.find(
-                templateDirectory, 1, 
+                XML_TEMPLATE_DIRECTORY, 1, 
                 (path, attr) -> path.toString().contains(filename) && attr.isRegularFile())) {
                     stream.forEach(pathlist::add);
         } catch (IOException e) {
