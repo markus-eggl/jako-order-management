@@ -17,20 +17,17 @@ import me.eggl.m.jakoordermanager.core.JOMWorkingDirectory;
 import me.eggl.m.jakoordermanager.common.GetSpecials;
 
 /**
+ * Class for the main UI window in the app.
  * 
+ * The UI is created in Swing. The UI would be created on currend data in the
+ * working directory. 
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
 public class MainFrame {
 
-    /**
-     * Class for the main UI window in the app.
-     * 
-     * The UI is created in Swing. The UI would be created on currend data in the
-     * working directory. 
-     * 
-     * @author Markus Eggl
-     * @version 1.0 (2026)
-     * @since 1.0
-     */
     public MainFrame(JOMWorkingDirectory jomConfiguration) {
         super();
         JFrame f = new JFrame("Order Manager");

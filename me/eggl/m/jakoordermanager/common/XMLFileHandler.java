@@ -27,7 +27,10 @@ import org.jdom2.output.XMLOutputter;
 import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTORY;
 
 /**
- * The class provide static methods for XML-files.
+ * This utility class provide static methods for XML-files.
+ * 
+ * This class provides only static helper methods 
+ * and is not intended to be instantiated or extended.
  * 
  * There are methods for
  * - open XML-files and get the root object,
@@ -39,7 +42,12 @@ import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTO
  * @version 1.0 (2026)
  * @since 1.0
  */
-public class XMLFileHandler {
+public final class XMLFileHandler {
+    
+    /**
+     * Private constructor to prevent instantiation from outside.
+     */
+    private XMLFileHandler() {};
     
     private static final Logger LOGGER = Logger.getLogger(XMLFileHandler.class.getName());
     static {

@@ -6,7 +6,10 @@ package me.eggl.m.jakoordermanager.common;
 import java.awt.Insets;
 
 /**
- * various methods
+ * This utility class provide various static methods
+ * 
+ * This class provides only static helper methods 
+ * and is not intended to be instantiated or extended.
  * 
  * - Insets for the JTextField
  * - colors for the terminal
@@ -15,7 +18,12 @@ import java.awt.Insets;
  * @version 1.0 (2026)
  * @since 1.0
  */
-public class GetSpecials {
+public final class GetSpecials {
+    
+    /**
+     * Private constructor to prevent instantiation from outside.
+     */
+    private GetSpecials() {};
     
     public static Insets getInsetsForTextField() {
         // Insets(top, left, bottom, right)

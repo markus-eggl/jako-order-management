@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * The class provide only static methods for file and directory management.
+ * The utility class provide only static methods for file and directory management.
  * 
  *  The methods are for checking the existence and read-/write permissions on
  *  directories and files. 
@@ -23,7 +23,12 @@ import java.util.logging.Logger;
  * @version 1.0 (2026)
  * @since 1.0
  */
-public class FileHandler {
+public final class FileHandler {
+    
+    /**
+     * Private constructor to prevent instantiation from outside.
+     */
+    private FileHandler() {};
     
     private static final Logger LOGGER = Logger.getLogger(FileHandler.class.getName());
     static {
@@ -93,8 +98,6 @@ public class FileHandler {
         }
         return checkDirectoryExistsAndPermissions( Path.of(path) );
     }
-    
-    
     
 }
 

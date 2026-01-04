@@ -10,13 +10,21 @@ import java.util.logging.ConsoleHandler;
 import javax.swing.JFileChooser;
 
 /**
- * The class provide a directory chooser.
+ * The utility class provide a directory chooser.
+ * 
+ * This class provides only static helper methods 
+ * and is not intended to be instantiated or extended.
  * 
  * @author Markus Eggl
  * @version 1.0 (2026)
  * @since 1.0
  */
-public class Chooser {
+public final class Chooser {
+    
+    /**
+     * Private constructor to prevent instantiation from outside.
+     */
+    private Chooser() {};
     
     private static final Logger LOGGER = Logger.getLogger(Chooser.class.getName());
     
