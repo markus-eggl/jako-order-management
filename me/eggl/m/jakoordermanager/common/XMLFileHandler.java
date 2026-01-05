@@ -60,11 +60,31 @@ public final class XMLFileHandler {
         LOGGER.setUseParentHandlers(false);
     }
     
+    /**
+     * This method read a XML-object from a file.
+     * 
+     * If the filepath is null or empty, it would be a 
+     * NoSuchFileException thrown.
+     * 
+     * @param filepath Path to the (XML-)file
+     * @return The XML-object from the file
+     * @throws JDOMException if the data in the file is not valid for xml
+     * @throws IOException if there a problems with the file or path
+     */
     public static Document readXMLObjectFromFile(String filepath) throws JDOMException, IOException {
         checkStringForNullOrEmpty(filepath);
         return new SAXBuilder().build(filepath);
     }
     
+    /**
+     * This method write a XML-object to a file.
+     * 
+     * If filepath is null or empty, it would be an IOException thrown.
+     * 
+     * @param doc The XML-object for writing in the file.
+     * @param filepath to the file that shout be written.
+     * @throws IOException if the path is not valid or problems to writing the file.
+     */
     public static void writeXMLObjectToFile(Document doc, String filepath) throws IOException {
         checkStringForNullOrEmpty(filepath);
         if (doc == null) {
@@ -79,8 +99,10 @@ public final class XMLFileHandler {
 
 
     /**
-     * @param filepath
-     * @throws NoSuchFileException
+     * The method checks a string if it is null or empty.
+     * 
+     * @param filepath the string that should be tested.
+     * @throws NoSuchFileException if the string is null or empty.
      */
     private static void checkStringForNullOrEmpty(String filepath) throws NoSuchFileException {
         if (filepath == null) {
@@ -91,7 +113,13 @@ public final class XMLFileHandler {
         }
     }
     
-    
+    /**
+     * The method copy a file from source to target
+     * 
+     * @param source the file that should be copied.
+     * @param target the point that should the file copy to. 
+     * @throws IOException by problems with a Path or missing permissions.
+     */
     public static void copyXMLTemplateInDirectory(Path source, Path target) throws IOException {
         LOGGER.log(Level.FINE, 
                 "\t copyXMLTemplateInDirectory aufgerufen:\n\t source: {0},\n\t target: {1}.\t",
@@ -115,9 +143,11 @@ public final class XMLFileHandler {
     }
 
     /**
-     * @param target
-     * @param sourceFile
-     * @throws IOException
+     * helper to copy a file from source to target.
+     * 
+     * @param source the file that should be copied.
+     * @param target the point that should the file copy to. 
+     * @throws IOException by problems with a Path or missing permissions.
      */
     private static void copyFile(Path targetFile, Path sourceFile) throws IOException {
         if ( FileHandler.checkFileExistsAndPermissions(sourceFile) ) {
@@ -140,16 +170,30 @@ public final class XMLFileHandler {
     }
 
     /**
-     * @param sourceFile
-     * @return
+     * This method build the path with the name of the sourcefile
+     * and the target directory.
+     * 
+     * The name of the file will not changed. 
+     * 
+     * @param sourceFile the name of the file
+     * @param target the complete path with filename
+     * @return the complete path for the target-file
      */
     private static Path getTargetFilePath(Path sourceFile, Path target) {
         return Path.of(target.getParent().toString() , sourceFile.getFileName().toString());
     }
 
     /**
-     * @param source
-     * @return
+     * The method looks for files with the same name in directory.
+     * 
+     * It would be looked for files with the same name but
+     * different extensions in the same directory. 
+     * For example the file "index.html":
+     * If there a files like "index.css" and "index.js", all of this
+     * filenames would be in the returned list.
+     * 
+     * @param source the specific path to the file
+     * @return the list with all similar filenames but different extensions.
      */
     private static List<Path> getSourceFiles(Path source) {
         String filename = getFilenameWithoutExtension(source.toString());
@@ -168,10 +212,18 @@ public final class XMLFileHandler {
     }
 
     /**
-     * @param source
-     * @return
+     * The method will return a string till the last '.'
+     * 
+     * If the String does not have a '.' or is null, it would be
+     * returned the complete string.
+     * 
+     * @param source the string
+     * @return the string to the last '.'
      */
     private static String getFilenameWithoutExtension(String source) {
+        if ( source == null ) {
+            return source;
+        }
         int pos = source.lastIndexOf('.');
         return pos >= 0 ? source.substring(0, pos) : source;
     }

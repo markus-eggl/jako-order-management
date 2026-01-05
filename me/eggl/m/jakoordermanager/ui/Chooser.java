@@ -37,6 +37,12 @@ public final class Chooser {
         LOGGER.addHandler(handler);
     }
     
+    /**
+     * This is a file chooser for directories.
+     * 
+     * @param title the title of the dialog.
+     * @return the chosen directory or "" if no directory was chosen.
+     */
     public static String directoryChooser(String title) {
         LOGGER.log(Level.INFO, "directoryChooser: {0}", title);
         JFileChooser chooser = new JFileChooser();

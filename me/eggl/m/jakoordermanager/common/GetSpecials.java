@@ -25,11 +25,35 @@ public final class GetSpecials {
      */
     private GetSpecials() {};
     
+    
+    /**
+     * the static methods returns a insets for JTextField.
+     * 
+     * The values can be changed here.
+     * 
+     * @return a insets for the border in a JTextField
+     */
     public static Insets getInsetsForTextField() {
         // Insets(top, left, bottom, right)
         return new Insets(1, 3, 1, 3);
     }
     
+    /**
+     * The method set the text color for terminal.
+     * 
+     * The color information would be added before the text.
+     * After the text the color would be reseted.
+     * Colors:
+     *  - 'r', 'red'
+     *  - 'g', 'green'
+     *  - 'y', 'yellow'
+     *  - 'b', 'blue'
+     *  - '' -> reset
+     * 
+     * @param text that should become a special color
+     * @param color for the text
+     * @return text with additional color-setting
+     */
     public static String setTextColorForTerminal(String text, String color) {
         String choosedColor = ( switch (color) {
             case "r", "red" -> "\u001B[31m";

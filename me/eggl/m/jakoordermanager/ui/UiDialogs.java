@@ -26,12 +26,22 @@ public class UiDialogs {
      */
     private UiDialogs() {};
     
+    /**
+     * Finished the app with an message.
+     * 
+     * @param message for the user.
+     */
     public static void appExitWithMessage(String message) {
         message = message + "\nOrder Manager would be closed!";
         JOptionPane.showMessageDialog(null, message);
         System.exit(0);
     }
     
+    /**
+     * Show a message to the user.
+     * 
+     * @param message for the user.
+     */
     public static void appMessage(String message) {
         JOptionPane.showMessageDialog(null, message);
     }

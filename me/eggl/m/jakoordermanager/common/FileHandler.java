@@ -41,26 +41,38 @@ public final class FileHandler {
         LOGGER.setUseParentHandlers(false);
     }
     
+    /**
+     * @param path that should be checked.
+     * @return if path is read- and writeable
+     * @throws IOException if the path is null of not valid
+     */
     public static boolean checkReadWritePermissionsForExistingPath(Path path) throws IOException {
         if (path == null) {
             throw new NoSuchFileException("Der übergebene Pfad ist null");
         }
         if ( ! Files.isReadable(path) ) {
             return false;
-            // throw new AccessDeniedException( String.format("Keine Leseberechtigung für die Datei: %s", path) );
         }
         if ( ! Files.isWritable(path) ) {
             return false;
-            // throw new AccessDeniedException( String.format("Keine Schreibberechtigung für die Datei: %s", path) );
         }
         return true;
     }
     
-    
+    /**
+     * @param path that should be tested
+     * @return if the path exists and is a file
+     * @throws NoSuchFileException if the path is null or not valid.
+     */
     public static boolean checkIfFileExists(Path path) throws NoSuchFileException {
         return ( checkIfPathExists(path) && Files.isRegularFile(path) );
     }
     
+    /**
+     * @param path that should be tested
+     * @return if path exists and is a directory
+     * @throws NoSuchFileException if path is null or not valid.
+     */
     public static boolean checkIfDirectoryExists(Path path) throws NoSuchFileException {
         return ( checkIfPathExists(path) && Files.isDirectory(path) );
     }
@@ -71,6 +83,11 @@ public final class FileHandler {
         return checkIfDirectoryExists( Path.of(path) );
     }
     
+    /**
+     * @param path for testing
+     * @return is path exists
+     * @throws NoSuchFileException path is null or not valid.
+     */
     private static boolean checkIfPathExists(Path path) throws NoSuchFileException {
         if (path == null) {
             throw new NoSuchFileException("Der übergebene Pfad ist null");
@@ -79,6 +96,11 @@ public final class FileHandler {
         return Files.exists(path);
     }
     
+    /**
+     * @param path for checking
+     * @return if path exists, is a file and permission to read and write. 
+     * @throws IOException path is null or not valid. 
+     */
     public static boolean checkFileExistsAndPermissions(Path path) throws IOException {
         if ( Files.isDirectory(path) ) {
             throw new NoSuchFileException( path + " is a directory! \n It should be a file." );
@@ -86,6 +108,11 @@ public final class FileHandler {
         return ( checkIfFileExists(path) & checkReadWritePermissionsForExistingPath(path) );
     }
     
+    /**
+     * @param path to be checked
+     * @return if path exists and is a directory with read- and write permission.
+     * @throws IOException if path is null or not valid. 
+     */
     public static boolean checkDirectoryExistsAndPermissions(Path path) throws IOException {
         if ( Files.isRegularFile(path) ) {
             throw new NotDirectoryException( path + " is a file! \n It should be a directory." );

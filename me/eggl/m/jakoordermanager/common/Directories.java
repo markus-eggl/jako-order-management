@@ -4,6 +4,8 @@
 package me.eggl.m.jakoordermanager.common;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This utility class provide the various directories
@@ -26,6 +28,10 @@ public final class Directories {
     private Directories() {}
     
     public static final Path XML_TEMPLATE_DIRECTORY = Path.of(".", "resources", "xmlTemplates");
+    public static final List<Path> SUB_DIRECTORIES = new ArrayList<>() {
+        
+    };
+    
 }
 
 

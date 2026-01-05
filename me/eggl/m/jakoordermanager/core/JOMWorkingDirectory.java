@@ -56,7 +56,10 @@ public class JOMWorkingDirectory {
     
 
     /**
+     * The constructor get the working directory from a 
+     * XML-file and check if it is valid.
      * 
+     * In case of a invalid working directory it would be reset.
      */
     private JOMWorkingDirectory() {
         super();
@@ -88,8 +91,11 @@ public class JOMWorkingDirectory {
     }
 
     /**
-     * @throws IOException 
+     * The method show a dialog for choosing a new working directory.
      * 
+     * The user has to choose a valid directory, or the app would be finished. 
+     * 
+     * @throws IOException if there a problems with the directory.
      */
     private void chooseWorkingDirectoryOrExit() throws IOException {
         this.setNewWorkingDirectory(Chooser.directoryChooser("Choose working directory"));
@@ -107,8 +113,17 @@ public class JOMWorkingDirectory {
     }
 
     /**
+     * The method set a new working directory.
+     * 
+     * The working directory will be checked before setting.
+     * If the new one is not valid, it will not be set. 
+     * If the current working directory is valid, the method
+     * will be finished without chances.
+     * If the current working directory is also not valid,
+     * the app will be finished. 
+     * 
      * @param newWorkingDirectory the workingDirectory to set
-     * @throws IOException 
+     * @throws IOException there a problems with the directory
      */
     public void setNewWorkingDirectory(String newWorkingDirectory) throws IOException {
         newWorkingDirectory.strip();
@@ -126,7 +141,10 @@ public class JOMWorkingDirectory {
     }
 
     /**
-     * @param workingDirectory
+     * The method save the working directory to the internal parameter and also
+     * to the XML-file. 
+     * 
+     * @param workingDirectory to save
      */
     private void saveNewWorkingDirectory(String workingDirectory) {
         LOGGER.log(Level.FINE, "SetWorkingDirectotry");
@@ -140,6 +158,12 @@ public class JOMWorkingDirectory {
     
     
     /**
+     * The method get a valid working directory or finishes the app.
+     * 
+     * Firstly it would be looked in the XML-file.
+     * If this directory is not useable, the user has to choose
+     * a new one.
+     * 
      * @throws IOException
      */
     private String getValidWorkingDirectoryOrExit() throws IOException {
@@ -152,7 +176,11 @@ public class JOMWorkingDirectory {
         return pathFromXMLFile;
     }
     
-
+    /**
+     * Write the XML-object to file.
+     * 
+     * In case of a IOException, the app would be finished.
+     */
     private void writeToXMLFile() {
         try {
             XMLFileHandler.writeXMLObjectToFile(doc, workingDirectoryFilename);

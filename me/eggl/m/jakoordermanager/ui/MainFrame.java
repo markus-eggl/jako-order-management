@@ -27,7 +27,14 @@ import me.eggl.m.jakoordermanager.common.GetSpecials;
  * @since 1.0
  */
 public class MainFrame {
-
+    
+    /**
+     * Create the main window of the app.
+     * 
+     * The method add different Swing elements and show it to the user.
+     * 
+     * @param jomConfiguration information about directories,...
+     */
     public MainFrame(JOMWorkingDirectory jomConfiguration) {
         super();
         JFrame f = new JFrame("Order Manager");
@@ -39,7 +46,9 @@ public class MainFrame {
     }
 
     /**
-     * @param f
+     * Set parameter for the window.
+     * 
+     * @param f the main frame.
      */
     private void setShowOptions(JFrame f) {
         f.setSize(500, 300);
@@ -48,7 +57,9 @@ public class MainFrame {
     }
 
     /**
-     * @param f
+     * The method add the different tabs to the main window.
+     * 
+     * @param f main frame.
      */
     private void addTabs(JFrame f, JOMWorkingDirectory jomConfiguration) {
         JTabbedPane tabbedPane = new JTabbedPane();
@@ -60,7 +71,9 @@ public class MainFrame {
     }
 
     /**
-     * @param tabbedPane
+     * The method add the confic tab.
+     * 
+     * @param tabbedPane container element for the tabs.
      */
     private void addConfigPanel(JTabbedPane tabbedPane, JOMWorkingDirectory jomConfiguration) {
         JPanel configPanel = new JPanel();
@@ -70,8 +83,11 @@ public class MainFrame {
     }
 
     /**
-     * @param jomConfiguration
-     * @return
+     * The method create the Elements for showing and changing
+     * the working directory.
+     * 
+     * @param jomConfiguration informations about directories.
+     * @return the textfield for the working directory.
      */
     private JTextField createWorkingDirectoryTextField(JOMWorkingDirectory jomConfiguration) {
         JTextField workingDirectory = new JTextField();
@@ -82,7 +98,13 @@ public class MainFrame {
     }
 
     /**
-     * @param f
+     * The method adds a additional dialog if the user will close
+     * the app.
+     * 
+     * This prevent a closing by accident. The user has to be confirm
+     * the closing.
+     * 
+     * @param f the main frame.
      */
     private void addClosingQuery(JFrame f) {
         f.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
