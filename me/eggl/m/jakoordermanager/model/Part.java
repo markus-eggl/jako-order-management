@@ -6,8 +6,6 @@ package me.eggl.m.jakoordermanager.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import me.eggl.m.jakoordermanager.common.Status;
-
 /**
  * 
  */

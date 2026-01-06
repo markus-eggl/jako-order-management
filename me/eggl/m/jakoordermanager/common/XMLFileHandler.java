@@ -3,6 +3,8 @@
  */
 package me.eggl.m.jakoordermanager.common;
 
+import static me.eggl.m.jakoordermanager.core.JOMTemplateDirectory.XML_TEMPLATE_DIRECTORY;
+
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -23,8 +25,6 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
-
-import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTORY;
 
 /**
  * This utility class provide static methods for XML-files.

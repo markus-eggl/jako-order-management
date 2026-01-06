@@ -3,6 +3,8 @@
  */
 package me.eggl.m.jakoordermanager.core;
 
+import static me.eggl.m.jakoordermanager.core.JOMTemplateDirectory.XML_TEMPLATE_DIRECTORY;
+
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -18,8 +20,6 @@ import me.eggl.m.jakoordermanager.common.GetSpecials;
 import me.eggl.m.jakoordermanager.common.XMLFileHandler;
 import me.eggl.m.jakoordermanager.ui.Chooser;
 import me.eggl.m.jakoordermanager.ui.UiDialogs;
-
-import static me.eggl.m.jakoordermanager.common.Directories.XML_TEMPLATE_DIRECTORY;
 
 /**
  * The class is the connection between the app and OMWorkingDirectory.xml
@@ -60,6 +60,7 @@ public class JOMWorkingDirectory {
      * XML-file and check if it is valid.
      * 
      * In case of a invalid working directory it would be reset.
+     * Private constructor to prevent instantiation from outside.
      */
     private JOMWorkingDirectory() {
         super();
