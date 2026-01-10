@@ -3,6 +3,8 @@
  */
 package me.eggl.m.jakoordermanager.core;
 
+import me.eggl.m.jakoordermanager.ui.MainFrame;
+
 /**
  * The main class for the app.
  * 
@@ -17,7 +19,7 @@ public class Main {
         JOMSubDirectories subDirectories = JOMSubDirectories.getInstance();
         subDirectories.setAndCreateSubDirectories(workingDirectory.getWorkingDirectory());
         
-//        new MainFrame(workingDirectory);
+        new MainFrame(workingDirectory, subDirectories);
     }
 
 

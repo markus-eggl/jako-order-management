@@ -105,13 +105,26 @@ public class JOMWorkingDirectory {
             UiDialogs.appExitWithMessage("No valid working directory choosen!");
         }
     }
-
+    
+    /**
+     * 
+     */
+    public void changeWorkingDirectory() {
+        try {
+            this.setNewWorkingDirectory(Chooser.directoryChooser("Choose working directory"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        LOGGER.log(Level.FINE, "Choosed Working Directory: {0}", this.workingDirectory);
+    }
+    
     /**
      * @return the workingDirectory
      */
     public String getWorkingDirectory() {
         return this.workingDirectory;
     }
+    
 
     /**
      * The method set a new working directory.
@@ -126,7 +139,7 @@ public class JOMWorkingDirectory {
      * @param newWorkingDirectory the workingDirectory to set
      * @throws IOException there a problems with the directory
      */
-    public void setNewWorkingDirectory(String newWorkingDirectory) throws IOException {
+    private void setNewWorkingDirectory(String newWorkingDirectory) throws IOException {
         newWorkingDirectory.strip();
         LOGGER.log(Level.FINE, "Arbeitsverzeichnis (strip): {0}", newWorkingDirectory);
         if ( FileHandler.checkDirectoryExistsAndPermissions( newWorkingDirectory ) ) {

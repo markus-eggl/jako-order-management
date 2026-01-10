@@ -3,9 +3,19 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -13,7 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 
+import me.eggl.m.jakoordermanager.core.JOMSubDirectories;
 import me.eggl.m.jakoordermanager.core.JOMWorkingDirectory;
+import me.eggl.m.jakoordermanager.model.Status;
 import me.eggl.m.jakoordermanager.common.GetSpecials;
 
 /**
@@ -28,6 +40,22 @@ import me.eggl.m.jakoordermanager.common.GetSpecials;
  */
 public class MainFrame {
     
+    private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
+    static {
+        // Level: OFF, INFO, FINE
+        final Level LOGLEVEL = Level.INFO;
+        LOGGER.setLevel(LOGLEVEL);
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setLevel(LOGLEVEL);
+        LOGGER.addHandler(handler);
+        LOGGER.setUseParentHandlers(false);
+    }
+    
+    private JTextField workingDirectory;
+    private Map<Status, JTextField> subDirectoryMap = new HashMap<>();
+    private JOMWorkingDirectory jomConfiguration;
+    private JOMSubDirectories subDirectories;
+    
     /**
      * Create the main window of the app.
      * 
@@ -35,12 +63,14 @@ public class MainFrame {
      * 
      * @param jomConfiguration information about directories,...
      */
-    public MainFrame(JOMWorkingDirectory jomConfiguration) {
+    public MainFrame(JOMWorkingDirectory jomConfiguration, JOMSubDirectories subDirectories) {
         super();
         JFrame f = new JFrame("Order Manager");
         // addClosingQuery(f);
-        addTabs(f, jomConfiguration);
+        this.jomConfiguration = jomConfiguration;
+        this.subDirectories = subDirectories;
         
+        addTabs(f);
         
         setShowOptions(f);
     }
@@ -61,26 +91,92 @@ public class MainFrame {
      * 
      * @param f main frame.
      */
-    private void addTabs(JFrame f, JOMWorkingDirectory jomConfiguration) {
+    private void addTabs(JFrame f) {
         JTabbedPane tabbedPane = new JTabbedPane();
-        // tabbedPane.addTab("Neu", new JLabel("Tab Neu"));
         
-        addConfigPanel(tabbedPane, jomConfiguration);
+        addNewPanel(tabbedPane);
         
+        addConfigPanel(tabbedPane);
         f.add(tabbedPane);
     }
+    
+    
+    private void addNewPanel(JTabbedPane tabbedPane) {
+        JPanel newPanel = new JPanel();
+        
+        
+        
+        tabbedPane.addTab("Neu", newPanel);
+    }
+    
 
     /**
-     * The method add the confic tab.
+     * The method add the config tab.
      * 
      * @param tabbedPane container element for the tabs.
      */
-    private void addConfigPanel(JTabbedPane tabbedPane, JOMWorkingDirectory jomConfiguration) {
+    private void addConfigPanel(JTabbedPane tabbedPane) {
         JPanel configPanel = new JPanel();
-        configPanel.add(new JLabel("Working directory:"));
-        configPanel.add(createWorkingDirectoryTextField(jomConfiguration));
+        configPanel.add(createConfigPanelWorkingDirectory());
+        configPanel.add(createConfigPanelSubDirectories());
         tabbedPane.addTab("Configuration", configPanel);
     }
+
+    /**
+     * @param subDirectories
+     * @return
+     */
+    private JPanel createConfigPanelSubDirectories() {
+        JPanel configPaneSubDirectories = new JPanel(new GridLayout(0, 2, 10, 5));
+        subDirectories.getSubDirectories().forEach( (status, directory) -> {
+            configPaneSubDirectories.add( new JLabel( status.toString() + ":" ) );
+            configPaneSubDirectories.add( createSubDirectoryTextField(status, directory) );
+        });
+        return configPaneSubDirectories;
+    }
+
+    /**
+     * @param directory
+     * @return
+     */
+    private JTextField createSubDirectoryTextField(Status status, Path directory) {
+        JTextField textField = new JTextField(directory.toString(), 20);
+        subDirectoryMap.put(status, textField);
+        textField.setMargin(GetSpecials.getInsetsForTextField());
+        textField.setEditable(false);
+        return textField;
+    }
+
+    /**
+     * @param jomConfiguration
+     * @return
+     */
+    private JPanel createConfigPanelWorkingDirectory() {
+        JPanel configPanelWorkingDirectory = new JPanel();
+        configPanelWorkingDirectory.add(new JLabel("Working directory:"));
+        configPanelWorkingDirectory.add(createWorkingDirectoryTextField(jomConfiguration));
+        configPanelWorkingDirectory.add(createWorkingDirectoryChangeButton());
+        return configPanelWorkingDirectory;
+    }
+
+    
+    private JButton createWorkingDirectoryChangeButton() {
+        final JButton change = new JButton("Chance Directory");
+        change.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                jomConfiguration.changeWorkingDirectory();
+                workingDirectory.setText(jomConfiguration.getWorkingDirectory());
+                subDirectories.setAndCreateSubDirectories(jomConfiguration.getWorkingDirectory());
+                LOGGER.log(Level.INFO, "SubDirectoryMap: {0}", subDirectoryMap);
+                subDirectoryMap.forEach( (status, textField) -> {
+                    textField.setText( subDirectories.getSubDirectoryFor(status).toString() );
+                });
+            }
+        });
+        return change;
+    }
+    
 
     /**
      * The method create the Elements for showing and changing
@@ -90,11 +186,11 @@ public class MainFrame {
      * @return the textfield for the working directory.
      */
     private JTextField createWorkingDirectoryTextField(JOMWorkingDirectory jomConfiguration) {
-        JTextField workingDirectory = new JTextField();
-        workingDirectory.setText(jomConfiguration.getWorkingDirectory());
-        workingDirectory.setEditable(false);
-        workingDirectory.setMargin(GetSpecials.getInsetsForTextField());
-        return workingDirectory;
+        this.workingDirectory = new JTextField(19);
+        this.workingDirectory.setText(jomConfiguration.getWorkingDirectory());
+        this.workingDirectory.setEditable(false);
+        this.workingDirectory.setMargin(GetSpecials.getInsetsForTextField());
+        return this.workingDirectory;
     }
 
     /**

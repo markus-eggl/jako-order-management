@@ -5,7 +5,6 @@ package me.eggl.m.jakoordermanager.core;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.EnumMap;
 import java.util.List;
@@ -18,7 +17,15 @@ import me.eggl.m.jakoordermanager.common.FileHandler;
 import me.eggl.m.jakoordermanager.common.GetSpecials;
 
 /**
+ * This class manage the sub directories for the app.
  * 
+ * For every status it would be a sub directory available. The sub
+ * directories are in the working directory. It is not possible to
+ * chance the names of the sub directories.
+ * 
+ * @author Markus Eggl
+ * @version 1.0 (2026)
+ * @since 1.0
  */
 public class JOMSubDirectories {
 
@@ -57,21 +64,35 @@ public class JOMSubDirectories {
     /**
      * @return the subDirectories
      */
-    private EnumMap<Status, Path> getSubDirectories() {
+    public EnumMap<Status, Path> getSubDirectories() {
         return this.subDirectories;
     }
-
+    
+    /**
+     * @return All sub directories in a List<String>
+     */
     public List<String> getAllSubDirectories() {
         LOGGER.log(Level.FINE, "\n\tDirectories: {0}", this.getSubDirectories().toString());
         return this.getSubDirectories().keySet().stream().map(Status::toString).toList();
     }
 
-    
+    /**
+     * @param status
+     * @return the path of the sub Directory of the status.
+     */
     public Path getSubDirectoryFor(Status status) {
         return this.getSubDirectories().get(status);
     }
     
-    
+    /**
+     * This method update the sub directories.
+     * 
+     * If the working directory has changed, the sub directories
+     * have to be update. Also have the sub directories to be
+     * created again if they not exist yet. 
+     * 
+     * @param workingDirectory
+     */
     public void setAndCreateSubDirectories(String workingDirectory) {
         try {
             this.setSubDirectories(workingDirectory);
@@ -81,6 +102,12 @@ public class JOMSubDirectories {
         }
     }
     
+    /**
+     * This method updates the internal EnumMap.
+     * 
+     * @param workingDirectory
+     * @throws IOException
+     */
     private void setSubDirectories(String workingDirectory) throws IOException {
         if ( ! FileHandler.checkDirectoryExistsAndPermissions(workingDirectory) ) {
             return;
@@ -94,6 +121,13 @@ public class JOMSubDirectories {
         LOGGER.log(Level.INFO, "SubDirectories: {0}", this.getSubDirectories().toString());
     }
     
+    /**
+     * This method creates the sub directories if they not exist yet.
+     * 
+     * The read- and writepermissions will be checked before.
+     * 
+     * @throws IOException if problems about the filesystem rises.
+     */
     private void createSubDirectories() throws IOException {
         for ( Status status : this.getSubDirectories().keySet() ) {
             if ( status == null ) {
