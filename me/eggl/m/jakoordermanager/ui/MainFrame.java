@@ -81,7 +81,6 @@ public class MainFrame extends JFrame {
         setShowOptions(f);
     }
 
-    
     /**
      * Set parameter for the window.
      * 
