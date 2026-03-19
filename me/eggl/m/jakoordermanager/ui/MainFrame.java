@@ -3,6 +3,7 @@
  */
 package me.eggl.m.jakoordermanager.ui;
 
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,6 +11,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
@@ -38,8 +41,9 @@ import me.eggl.m.jakoordermanager.common.GetSpecials;
  * @version 1.0 (2026)
  * @since 1.0
  */
-public class MainFrame {
+public class MainFrame extends JFrame {
     
+    private static final long serialVersionUID = 1L;
     private static final Logger LOGGER = Logger.getLogger(MainFrame.class.getName());
     static {
         // Level: OFF, INFO, FINE
@@ -55,6 +59,8 @@ public class MainFrame {
     private Map<Status, JTextField> subDirectoryMap = new HashMap<>();
     private JOMWorkingDirectory jomConfiguration;
     private JOMSubDirectories subDirectories;
+    private List<String> toDos = new LinkedList<>(); 
+    private JTextField addTodo = new JTextField(20);
     
     /**
      * Create the main window of the app.
@@ -75,6 +81,7 @@ public class MainFrame {
         setShowOptions(f);
     }
 
+    
     /**
      * Set parameter for the window.
      * 
@@ -94,7 +101,7 @@ public class MainFrame {
     private void addTabs(JFrame f) {
         JTabbedPane tabbedPane = new JTabbedPane();
         
-        addNewPanel(tabbedPane);
+//        addNewPanel(tabbedPane);
         
         addConfigPanel(tabbedPane);
         f.add(tabbedPane);
@@ -104,11 +111,67 @@ public class MainFrame {
     private void addNewPanel(JTabbedPane tabbedPane) {
         JPanel newPanel = new JPanel();
         
+        newPanel.add(createClientName());
+        newPanel.add(createClientContact());
+        newPanel.add(createTodo());
         
-        
-        tabbedPane.addTab("Neu", newPanel);
+        tabbedPane.addTab("New", newPanel);
     }
-    
+
+    /**
+     * @return
+     */
+    private Component createClientContact() {
+        JPanel clientContact = new JPanel();
+        clientContact.add( new JLabel("Contact details:") );
+        clientContact.add( new JTextField(20) );
+        return clientContact;
+    }
+
+    /**
+     * @return
+     */
+    private Component createClientName() {
+        JPanel clientName = new JPanel();
+        clientName.add( new JLabel("Name:") );
+        clientName.add( new JTextField(20) );
+        return clientName;
+    }
+
+    /**
+     * @return
+     */
+    private Component createTodo() {
+        JPanel todo = new JPanel();
+        todo.add( new JLabel("Todo:") );
+        todo.add( this.addTodo );
+        todo.add( createAddTodoButton() );
+        for (String addedTodo : this.toDos) {
+            todo.add( new JLabel("Todo:") );
+            todo.add( new JLabel(addedTodo) );
+        }
+        return todo;
+    }
+
+
+    /**
+     * @return
+     */
+    private Component createAddTodoButton() {
+        final JButton addTodoButton = new JButton( "Add Todo" );
+        addTodoButton.addActionListener( new ActionListener() {
+            @Override
+            public void actionPerformed( ActionEvent e ) {
+                if ( ! addTodo.getText().isBlank() ) {
+                    toDos.add(addTodo.getText());
+                    addTodo.setText("");
+                    LOGGER.log(Level.INFO, "Todo List: {0}", toDos);
+                }
+            }
+        });
+        
+        return addTodoButton;
+    }
 
     /**
      * The method add the config tab.
